@@ -22,6 +22,7 @@ const destroyer = require('server-destroy');
 
 const {google} = require('googleapis');
 const people = google.people('v1');
+const mybusiness = google.mybusinessaccountmanagement('v1');
 
 /**
  * To use OAuth2 authentication, we need access to a CLIENT_ID, CLIENT_SECRET, AND REDIRECT_URI.  To get these credentials for your application, visit https://console.cloud.google.com/apis/credentials.
@@ -84,15 +85,21 @@ async function runSample() {
   // retrieve user profile
   const res = await people.people.get({
     resourceName: 'people/me',
-    personFields: 'emailAddresses',
+    personFields: 'emailAddresses,names,photos',
   });
   console.log(res.data);
+
+  const res1= await mybusiness.accounts.get({
+    name: 'accounts/1111222233334444'
+  });
+  console.log(res1.data)
 }
 
 const scopes = [
   'https://www.googleapis.com/auth/contacts.readonly',
   'https://www.googleapis.com/auth/user.emails.read',
   'profile',
+  'https://www.googleapis.com/auth/business.manage'
 ];
 authenticate(scopes)
   .then(client => runSample(client))
